@@ -1,0 +1,104 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema mydb1
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb1
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb1` DEFAULT CHARACTER SET utf8 ;
+USE `mydb1` ;
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`admin`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`admin` (
+  `id` INT(11) NOT NULL,
+  `nume` VARCHAR(45) NULL DEFAULT NULL,
+  `password` VARCHAR(45) NULL DEFAULT NULL,
+  `idagent` INT(11) NOT NULL,
+  INDEX `fk_admin_agent1_idx` (`idagent` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`agent`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`agent` (
+  `idagent` INT(11) NOT NULL,
+  `nume` VARCHAR(45) NULL DEFAULT NULL,
+  `password` VARCHAR(45) NULL DEFAULT NULL,
+  `adresa` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idagent`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`client`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`client` (
+  `identity_number` INT(11) NOT NULL,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `passport` INT(11) NULL DEFAULT NULL,
+  `adresa` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`identity_number`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`holiday`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`holiday` (
+  `idholiday` INT(11) NOT NULL,
+  `destination` VARCHAR(45) NULL DEFAULT NULL,
+  `hotel` VARCHAR(45) NULL DEFAULT NULL,
+  `number_persons` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`idholiday`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb1`.`holiday_schedule`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb1`.`holiday_schedule` (
+  `id_client` INT(11) NOT NULL,
+  `id_holiday` INT(11) NOT NULL,
+  `total_price` INT(11) NULL DEFAULT NULL,
+  `final_payment` DATE NULL DEFAULT NULL,
+  `paid` TINYINT(4) NULL DEFAULT NULL,
+  `idagent` INT(11) NOT NULL,
+  `partial` INT(11) NOT NULL,
+  `time_tranzaction` DATE NULL DEFAULT NULL,
+  PRIMARY KEY (`id_client`, `id_holiday`, `idagent`),
+  INDEX `fk_client_has_holiday_holiday1_idx` (`id_holiday` ASC),
+  INDEX `fk_client_has_holiday_client_idx` (`id_client` ASC),
+  INDEX `fk_holiday_schedule_agent1_idx` (`idagent` ASC),
+  CONSTRAINT `fk_client_has_holiday_client`
+    FOREIGN KEY (`id_client`)
+    REFERENCES `mydb1`.`client` (`identity_number`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_client_has_holiday_holiday1`
+    FOREIGN KEY (`id_holiday`)
+    REFERENCES `mydb1`.`holiday` (`idholiday`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
